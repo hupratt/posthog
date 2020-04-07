@@ -19,11 +19,11 @@ from sentry_sdk.integrations.django import DjangoIntegration
 
 VERSION = '1.4.0'
 
-def get_env(key):
-    try:
-        return os.environ[key]
-    except KeyError:
-        raise ImproperlyConfigured(f'The environment var "{key}" is absolutely required to run this software')
+# def get_env(key):
+#     try:
+#         return os.environ[key]
+#     except KeyError:
+#         raise ImproperlyConfigured(f'The environment var "{key}" is absolutely required to run this software')
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 
@@ -36,6 +36,16 @@ SITE_URL = os.environ.get('SITE_URL', 'http://localhost:8000')
 
 SECURE_SSL_REDIRECT = False
 
+if os.environ.get("DJANGO_DEVELOPMENT") is None:
+    # Sentry
+    import sentry_sdk  # pylint: disable=import-error
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        dsn="https://edab42407c7042cb9826032d2aae6234@sentry.io/2550899",
+        integrations=[DjangoIntegration()],
+    )
+    
 if not DEBUG and not TEST:
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
@@ -98,7 +108,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware'
+    # 'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 INTERNAL_IPS = ['127.0.0.1']
 CORS_ORIGIN_ALLOW_ALL = True
@@ -165,40 +175,38 @@ SOCIAL_AUTH_GITLAB_API_URL = os.environ.get('SOCIAL_AUTH_GITLAB_API_URL', "https
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-if TEST or DEBUG:
-    DATABASE_URL = os.environ.get('DATABASE_URL', 'postgres://localhost:5432/posthog')
-else:
-    DATABASE_URL = os.environ.get('DATABASE_URL', '')
+# if TEST or DEBUG:
+#     DATABASE_URL = os.environ.get('DATABASE_URL', None)
+# else:
+#     DATABASE_URL = os.environ.get('DATABASE_URL', 'postgres://localhost:5432/posthog')
 
-if DATABASE_URL:
-    DATABASES = {
-        'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
+# if DATABASE_URL:
+#     DATABASES = {
+#         'default': dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
+#     }
+# if os.environ.get('POSTHOG_DB_NAME'):
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get('POSTHOG_DB_NAME'),
+        'USER': os.environ.get('POSTHOG_DB_USER', 'postgres'),
+        'PASSWORD': os.environ.get('POSTHOG_DB_PASSWORD', ''),
+        'HOST': os.environ.get('POSTHOG_POSTGRES_HOST', 'localhost'),
+        'PORT': os.environ.get('POSTHOG_POSTGRES_PORT', '5432'),
+        'CONN_MAX_AGE': 0,
     }
-elif os.environ.get('POSTHOG_DB_NAME'):
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': get_env('POSTHOG_DB_NAME'),
-            'USER': os.environ.get('POSTHOG_DB_USER', 'postgres'),
-            'PASSWORD': os.environ.get('POSTHOG_DB_PASSWORD', ''),
-            'HOST': os.environ.get('POSTHOG_POSTGRES_HOST', 'localhost'),
-            'PORT': os.environ.get('POSTHOG_POSTGRES_PORT', '5432'),
-            'CONN_MAX_AGE': 0,
-        }
-    }
-else:
-    raise ImproperlyConfigured(f'The environment vars "DATABASE_URL" or "POSTHOG_DB_NAME" are absolutely required to run this software')
+}
+# else:
+#     raise ImproperlyConfigured(f'The environment vars "DATABASE_URL" or "POSTHOG_DB_NAME" are absolutely required to run this software')
 
 # Broker
 
 # The last case happens when someone upgrades Heroku but doesn't have Redis installed yet. Collectstatic gets called before we can provision Redis.
-if TEST or DEBUG or (sys.argv[1] and sys.argv[1] == 'collectstatic'):
-    REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost/')
-else:
-    REDIS_URL = os.environ.get('REDIS_URL', '')
 
-if not REDIS_URL and os.environ.get('POSTHOG_REDIS_HOST', ''):
-    REDIS_URL = "redis://:{}@{}:{}/".format(os.environ.get('POSTHOG_REDIS_PASSWORD', ''), os.environ.get('POSTHOG_REDIS_HOST', ''), os.environ.get('POSTHOG_REDIS_PORT', '6379'))
+REDIS_URL = os.environ.get('REDIS_URL', '')
+
+if not REDIS_URL or os.environ.get('POSTHOG_REDIS_HOST', ''):
+    REDIS_URL = "redis://{}:{}/".format( os.environ.get('POSTHOG_REDIS_HOST', ''), os.environ.get('POSTHOG_REDIS_PORT', '6379'))
 
 if not REDIS_URL:
     print("⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️")
@@ -243,7 +251,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "Europe/Luxembourg"
 
 USE_I18N = True
 
@@ -260,7 +268,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'frontend/dist'),
 ]
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 AUTH_USER_MODEL = 'posthog.User'
 

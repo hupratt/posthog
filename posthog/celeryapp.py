@@ -3,13 +3,19 @@ import os
 from celery import Celery
 from django.conf import settings
 import redis
-import time
+import time, dotenv
+
+# Load .env variables
+if os.environ.get("DJANGO_DEVELOPMENT") == "true":
+    dotenv.read_dotenv("/home/ubuntu/Dev/posthog/.env.development")
+else:
+    dotenv.read_dotenv("/home/ubuntu/Dev/posthog/.env")
 
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'posthog.settings')
 
 app = Celery('posthog')
-
+app.conf.broker_url = os.environ.get("REDIS_URL")
 # Using a string here means the worker doesn't have to serialize
 # the configuration object to child processes.
 # - namespace='CELERY' means all celery-related configuration keys
@@ -20,7 +26,7 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
 # Connect to our Redis instance to store the heartbeat
-redis_instance = redis.from_url(settings.REDIS_URL, db=0)
+redis_instance = redis.from_url(os.environ.get("REDIS_URL"), db=0)
 
 @app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):

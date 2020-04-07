@@ -28,7 +28,6 @@ def _create_anonymous_users(team: Team, base_url: str) -> None:
     for index, person in enumerate(Person.objects.filter(team=team)):
         if index > 0 and index % 14 == 0:
             days_ago -= 1
-
         distinct_id = str(uuid.uuid4())
         distinct_ids.append(PersonDistinctId(team=team, person=person, distinct_id=distinct_id))
         date = now() - relativedelta(days=days_ago)
@@ -113,10 +112,10 @@ def _recalculate(team: Team) -> None:
 
 def demo(request):
     team = request.user.team_set.get()
-    if Event.objects.filter(team=team).count() == 0:
-        _create_anonymous_users(team=team, base_url=request.build_absolute_uri('/demo/'))
-        _create_funnel(team=team, base_url=request.build_absolute_uri('/demo/'))
-        _recalculate(team=team)
+    # if Event.objects.filter(team=team).count() == 0:
+    #     _create_anonymous_users(team=team, base_url=request.build_absolute_uri('/demo/'))
+    #     _create_funnel(team=team, base_url=request.build_absolute_uri('/demo/'))
+    #     _recalculate(team=team)
     return render_template('demo.html', request=request, context={'api_token': team.api_token})
 
 def delete_demo_data(request):
@@ -128,5 +127,17 @@ def delete_demo_data(request):
     Funnel.objects.filter(team=team, name__contains="HogFlix").delete()
     Action.objects.filter(team=team, name__contains="HogFlix").delete()
     DashboardItem.objects.filter(team=team, name__contains="HogFlix").delete()
+
+    return JsonResponse({'status': 'ok'})
+
+def delete_all_data(request):
+    team = request.user.team_set.get()
+
+    people = PersonDistinctId.objects.filter(team=team)
+    Event.objects.filter(team=team).delete()
+    Person.objects.filter(team=team).delete()
+    Funnel.objects.filter(team=team).delete()
+    Action.objects.filter(team=team).delete()
+    DashboardItem.objects.filter(team=team).delete()
 
     return JsonResponse({'status': 'ok'})

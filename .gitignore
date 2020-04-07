@@ -3,6 +3,7 @@ env
 *.pyc
 staticfiles
 .env
+.env.development
 settings.yml
 .DS_Store
 debug.log
@@ -15,7 +16,6 @@ node_modules
 .vscode/*
 frontend/.cache/
 .mypy_cache
-frontend/dist/*
 frontend/yarn-error.log
 .idea
 celerybeat-schedule
@@ -23,3 +23,9 @@ celerybeat.pid
 yarn-error.log
 .yalc
 yalc.lock
+bin/
+include/
+lib/
+share/
+*-lock.json
+apache/
