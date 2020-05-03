@@ -13,7 +13,7 @@ from .api import router, capture, user
 from .models import Team, User
 from .utils import render_template
 from .views import health, stats
-from posthog.demo import demo, delete_demo_data
+from posthog.demo import demo, delete_demo_data, delete_all_data
 import json
 import posthoganalytics
 import os
@@ -23,14 +23,11 @@ from rest_framework import permissions
 def home(request, **kwargs):
     if request.path.endswith('.map') or request.path.endswith('.map.js'):
         return redirect('/static%s' % request.path)
-    return render_template('index.html', request)
+    return redirect('/setup_admin')
 
 def login_view(request):
     if request.user.is_authenticated:
-        return redirect('/')
-
-    if not User.objects.exists():
-        return redirect('/setup_admin')
+        return render_template('index.html', request)
     if request.method == 'POST':
         email = request.POST['email']
         password = request.POST['password']
@@ -39,22 +36,22 @@ def login_view(request):
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             if user.distinct_id:
                 posthoganalytics.capture(user.distinct_id, 'user logged in')
-            return redirect('/')
+            return redirect('/index.html')
         else:
             return render_template('login.html', request=request, context={'email': email, 'error': True})
     return render_template('login.html', request)
 
 def signup_to_team_view(request, token):
     if request.user.is_authenticated:
-        return redirect('/')
+        return redirect('/index.html')
     if not token:
-        return redirect('/')
+        return redirect('/index.html')
     if not User.objects.exists():
         return redirect('/setup_admin')
     try:
         team = Team.objects.get(signup_token=token)
     except Team.DoesNotExist:
-        return redirect('/')
+        return redirect('/index.html')
 
     if request.method == 'POST':
         email = request.POST['email']
@@ -70,15 +67,13 @@ def signup_to_team_view(request, token):
         team.save()
         posthoganalytics.capture(user.distinct_id, 'user signed up', properties={'is_first_user': False})
         posthoganalytics.identify(user.distinct_id, {'email_opt_in': user.email_opt_in})
-        return redirect('/')
+        return redirect('/index.html')
     return render_template('signup_to_team.html', request, context={'team': team, 'signup_token': token})
 
 def setup_admin(request):
-    if User.objects.exists():
-        return redirect('/login')
     if request.method == 'GET':
         if request.user.is_authenticated:
-            return redirect('/')
+            return render_template('index.html', request)
         return render_template('setup_admin.html', request)
     if request.method == 'POST':
         email = request.POST['email']
@@ -95,7 +90,7 @@ def setup_admin(request):
             'company_name': company_name,
             'name': user.first_name
         })
-        return redirect('/')
+        return render_template('index.html', request)
 
 def social_create_user(strategy, details, backend, user=None, *args, **kwargs):
     if user:
@@ -152,6 +147,7 @@ urlpatterns = [
     path('engage', capture.get_event),
     re_path(r'^demo.*', decorators.login_required(demo)),
     path('delete_demo_data/', decorators.login_required(delete_demo_data)),
+    path('delete_all_data/', decorators.login_required(delete_all_data)),
     path('e/', capture.get_event),
     path('track', capture.get_event),
     path('track/', capture.get_event),
@@ -172,7 +168,7 @@ urlpatterns = urlpatterns + [
     path('', include('social_django.urls', namespace='social')),
     path('setup_admin', setup_admin, name='setup_admin'),
     path('accounts/reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(
-        success_url='/',
+        success_url='/index.html',
         post_reset_login_backend='django.contrib.auth.backends.ModelBackend',
         post_reset_login=True,
     )),

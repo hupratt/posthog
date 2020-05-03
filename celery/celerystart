@@ -1,0 +1,4 @@
+# sudo nano /etc/tmpfiles.d/celery.conf
+
+d /var/run/celery 0755 celery celery -
+d /var/log/celery 0755 celery celery -

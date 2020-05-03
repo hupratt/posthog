@@ -16,7 +16,6 @@ node_modules
 .vscode/*
 frontend/.cache/
 .mypy_cache
-frontend/dist/*
 frontend/yarn-error.log
 .idea
 celerybeat-schedule
@@ -29,3 +28,4 @@ include/
 lib/
 share/
 *-lock.json
+apache/
