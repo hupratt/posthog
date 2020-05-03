@@ -3,6 +3,7 @@ env
 *.pyc
 staticfiles
 .env
+.env.development
 settings.yml
 .DS_Store
 debug.log
@@ -23,3 +24,8 @@ celerybeat.pid
 yarn-error.log
 .yalc
 yalc.lock
+bin/
+include/
+lib/
+share/
+*-lock.json

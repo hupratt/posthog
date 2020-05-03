@@ -17,6 +17,7 @@ defusedxml==0.6.0
 dj-database-url==0.5.0
 Django==3.0.5
 django-cors-headers==3.2.1
+django-dotenv==1.4.2
 django-extensions==2.2.9
 django-loginas==0.3.8
 django-slack==5.14.3
@@ -47,9 +48,9 @@ pandas==1.0.3
 parso==0.6.1
 pexpect==4.7.0
 pickleshare==0.7.5
+pkg-resources==0.0.0
 posthoganalytics==1.0.10
 prompt-toolkit==2.0.10
-psycopg2==2.8.4
 psycopg2-binary==2.8.5
 ptyprocess==0.6.0
 pycparser==2.20
@@ -74,6 +75,7 @@ tenacity==6.1.0
 traitlets==4.3.3
 typed-ast==1.4.1
 typing-extensions==3.7.4.2
+unicodecsv==0.14.1
 uritemplate==3.0.1
 urllib3==1.25.8
 uuid==1.30
@@ -82,4 +84,3 @@ wcwidth==0.1.9
 Werkzeug==1.0.0
 whitenoise==5.0.1
 zipp==3.1.0
-

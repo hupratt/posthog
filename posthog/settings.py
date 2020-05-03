@@ -166,9 +166,9 @@ SOCIAL_AUTH_GITLAB_API_URL = os.environ.get('SOCIAL_AUTH_GITLAB_API_URL', "https
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 if TEST or DEBUG:
-    DATABASE_URL = os.environ.get('DATABASE_URL', 'postgres://localhost:5432/posthog')
+    DATABASE_URL = os.environ.get('DATABASE_URL', None)
 else:
-    DATABASE_URL = os.environ.get('DATABASE_URL', '')
+    DATABASE_URL = os.environ.get('DATABASE_URL', 'postgres://localhost:5432/posthog')
 
 if DATABASE_URL:
     DATABASES = {
