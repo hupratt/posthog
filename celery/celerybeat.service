@@ -7,7 +7,7 @@ After=network.target
 Type=simple
 User=celery
 Group=celery
-EnvironmentFile='${CELERY_WDIR}/celery/celery.conf'
+EnvironmentFile=${CELERY_CONF}
 WorkingDirectory=${CELERY_WDIR}
 ExecStart=/bin/sh -c '${CELERY_BIN} \
   -A ${CELERY_APP} ${CELERYD_NODES} \
