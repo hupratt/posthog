@@ -7,11 +7,8 @@ After=network.target
 Type=simple
 User=celery
 Group=celery
-EnvironmentFile=/home/ubuntu/Dev/posthog/celery/celery.conf
-#ExecStartPre=-/bin/mkdir -p /home/ubuntu/Dev/posthog/celery
-#ExecStartPre=-/bin/chown -R celery:celery /home/ubuntu/Dev/posthog/celery
-#ExecStartPre=-/bin/chmod -R 770 /home/ubuntu/Dev/posthog/celery
-WorkingDirectory=/home/ubuntu/Dev/posthog/
+EnvironmentFile='${CELERY_WDIR}/celery/celery.conf'
+WorkingDirectory=${CELERY_WDIR}
 ExecStart=/bin/sh -c '${CELERY_BIN} \
   -A ${CELERY_APP} ${CELERYD_NODES} \
   -B --scheduler=redbeat.RedBeatScheduler --pidfile=${CELERYD_PID_FILE} \
