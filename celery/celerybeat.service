@@ -7,8 +7,8 @@ After=network.target
 Type=simple
 User=celery
 Group=celery
-EnvironmentFile=${CELERY_CONF}
-WorkingDirectory=${CELERY_WDIR}
+EnvironmentFile=/home/ubuntu/Dev/posthog/celery/celery.conf
+WorkingDirectory=/home/ubuntu/Dev/posthog/
 ExecStart=/bin/sh -c '${CELERY_BIN} \
   -A ${CELERY_APP} ${CELERYD_NODES} \
   -B --scheduler=redbeat.RedBeatScheduler --pidfile=${CELERYD_PID_FILE} \
