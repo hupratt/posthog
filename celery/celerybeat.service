@@ -1,4 +1,4 @@
-# /etc/systemd/system/celerybeat.service
+# /etc/systemd/system/celerybeat-posthog.service
 [Unit]
 Description=Celery Beat Service
 After=network.target
