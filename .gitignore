@@ -29,5 +29,5 @@ lib/
 share/
 *-lock.json
 apache/
-frontend/dist
+src/frontend/static
 env/
