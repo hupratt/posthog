@@ -11,8 +11,6 @@ import os, dotenv, sys
 
 from django.core.wsgi import get_wsgi_application
 
-sys.path.append("/home/ubuntu/Dev/posthog")
-
 if os.environ.get("DJANGO_DEVELOPMENT") == "True":
     dotenv.read_dotenv("/home/ubuntu/Dev/posthog/.env.development")
 else:

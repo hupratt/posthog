@@ -96,7 +96,8 @@ INSTALLED_APPS = [
     'loginas',
     'corsheaders',
     'social_django',
-    'django_celery_beat'
+    'django_celery_beat',
+    "frontend"
     
 ]
 
@@ -232,7 +233,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static')
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = 'posthog.User'
