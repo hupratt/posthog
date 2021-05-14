@@ -17,6 +17,7 @@ def user(request):
     if not request.user.is_authenticated:
         return HttpResponse('Unauthorized', status=401)
 
+
     team = request.user.team_set.get()
 
     if request.method == 'PATCH':
