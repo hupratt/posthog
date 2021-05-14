@@ -95,7 +95,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'loginas',
     'corsheaders',
-    'social_django'
+    'social_django',
+    'django_celery_beat'
+    
 ]
 
 MIDDLEWARE = [
@@ -201,31 +203,9 @@ DATABASES = {
 
 # Broker
 
-# The last case happens when someone upgrades Heroku but doesn't have Redis installed yet. Collectstatic gets called before we can provision Redis.
 
-REDIS_URL = os.environ.get('REDIS_URL', 'redis://127.0.0.1:6379/')
-
-if not REDIS_URL or os.environ.get('POSTHOG_REDIS_HOST', ''):
-    REDIS_URL = "redis://{}:{}/".format( os.environ.get('POSTHOG_REDIS_HOST', ''), os.environ.get('POSTHOG_REDIS_PORT', '6379'))
-
-if not REDIS_URL:
-    print("⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️")
-    print("️⚠️ 🚨🚨🚨 PostHog warning! 🚨🚨🚨")
-    print("⚠️")
-    print("️⚠️ The environment variable REDIS_URL or POSTHOG_REDIS_HOST is not configured!")
-    print("⚠️ Redis will be mandatory in the next versions of PostHog (1.1.0+).")
-    print("⚠️ Please configure it now to avoid future surprises!")
-    print("⚠️")
-    print("⚠️ See here for more information!")
-    print("⚠️ --> https://docs.posthog.com/#/upgrading-posthog?id=upgrading-from-before-1011")
-    print("⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️")
-
-    raise ImproperlyConfigured(f'The environment var "REDIS_URL" or "POSTHOG_REDIS_HOST" is absolutely required to run this software. If you\'re upgrading from an earlier version of PostHog, see here: https://docs.posthog.com/#/upgrading-posthog?id=upgrading-from-before-1011')
-
-
-CELERY_BROKER_URL = REDIS_URL       # celery connects to redis
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')      # celery connects to rabbitmq
 CELERY_BEAT_MAX_LOOP_INTERVAL = 30  # sleep max 30sec before checking for new periodic events
-REDBEAT_LOCK_TIMEOUT = 45           # keep distributed beat lock for 45sec
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -298,3 +278,10 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'tim@posthog.com')
 
 # You can pass a comma deliminated list of domains with which users can sign up to this service
 RESTRICT_SIGNUPS = os.environ.get('RESTRICT_SIGNUPS', False)
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'cache_table',
+    }
+}

@@ -1,4 +1,4 @@
-# /etc/systemd/system/celerybeat-posthog.service
+# sudo nano /etc/systemd/system/celerybeat-posthog.service
 [Unit]
 Description=Celery Beat Service
 After=network.target
@@ -9,15 +9,20 @@ User=celery
 Group=celery
 EnvironmentFile=/home/ubuntu/Dev/posthog/celery/celery.conf
 WorkingDirectory=/home/ubuntu/Dev/posthog/
+
+PermissionsStartOnly=true
+ExecStartPre=-/usr/bin/mkdir -p /var/run/celery/posthog/
+ExecStartPre=/usr/bin/chown -R celery:ubuntu /var/run/celery/posthog/
+
 ExecStart=/bin/sh -c '${CELERY_BIN} \
   -A ${CELERY_APP} ${CELERYD_NODES} \
-  -B --scheduler=redbeat.RedBeatScheduler --pidfile=${CELERYD_PID_FILE} \
+  -B --scheduler django_celery_beat.schedulers:DatabaseScheduler --pidfile=${CELERYD_PID_FILE} \
   --logfile=${CELERYD_LOG_FILE} --loglevel=${CELERYD_LOG_LEVEL} ${CELERYD_OPTS}'
 ExecStop=/bin/sh -c '${CELERY_BIN} multi stopwait ${CELERYD_NODES}\
   --pidfile=${CELERYD_PID_FILE} \
   --logfile=${CELERYD_LOG_FILE} --loglevel=${CELERYD_LOG_LEVEL} ${CELERYD_OPTS}'
 ExecReload=/bin/sh -c '${CELERY_BIN} -A ${CELERY_APP} ${CELERYD_NODES}\
-  -B --scheduler=redbeat.RedBeatScheduler --pidfile=${CELERYD_PID_FILE} \
+  -B --scheduler django_celery_beat.schedulers:DatabaseScheduler --pidfile=${CELERYD_PID_FILE} \
   --logfile=${CELERYD_LOG_FILE} --loglevel=${CELERYD_LOG_LEVEL} ${CELERYD_OPTS}'
 
 [Install]

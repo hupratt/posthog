@@ -30,3 +30,4 @@ share/
 *-lock.json
 apache/
 frontend/dist
+env/
