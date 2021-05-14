@@ -6,7 +6,7 @@ import redis
 import time, dotenv
 
 # Load .env variables
-if os.environ.get("DJANGO_DEVELOPMENT") == "true":
+if os.environ.get("DJANGO_DEVELOPMENT") == "True":
     dotenv.read_dotenv("/home/ubuntu/Dev/posthog/.env.development")
 else:
     dotenv.read_dotenv("/home/ubuntu/Dev/posthog/.env")
@@ -26,7 +26,7 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
 # Connect to our Redis instance to store the heartbeat
-redis_instance = redis.from_url(os.environ.get("REDIS_URL"), db=0)
+redis_instance = redis.from_url(os.environ.get("REDIS_URL","redis://127.0.0.1:6379/"), db=0)
 
 @app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):

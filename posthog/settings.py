@@ -203,7 +203,7 @@ DATABASES = {
 
 # The last case happens when someone upgrades Heroku but doesn't have Redis installed yet. Collectstatic gets called before we can provision Redis.
 
-REDIS_URL = os.environ.get('REDIS_URL', '')
+REDIS_URL = os.environ.get('REDIS_URL', 'redis://127.0.0.1:6379/')
 
 if not REDIS_URL or os.environ.get('POSTHOG_REDIS_HOST', ''):
     REDIS_URL = "redis://{}:{}/".format( os.environ.get('POSTHOG_REDIS_HOST', ''), os.environ.get('POSTHOG_REDIS_PORT', '6379'))
