@@ -6,13 +6,13 @@ After=network.target
 [Service]
 Type=simple
 User=celery
-Group=celery
+Group=www-data
 EnvironmentFile=/home/ubuntu/Dev/posthog/celery/celery.conf
 WorkingDirectory=/home/ubuntu/Dev/posthog/
 
 PermissionsStartOnly=true
 ExecStartPre=-/usr/bin/mkdir -p /var/run/celery/posthog/
-ExecStartPre=/usr/bin/chown -R celery:ubuntu /var/run/celery/posthog/
+ExecStartPre=/usr/bin/chown -R celery:www-data /var/run/celery/posthog/
 
 ExecStart=/bin/sh -c '${CELERY_BIN} \
   -A ${CELERY_APP} ${CELERYD_NODES} \

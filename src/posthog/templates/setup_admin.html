@@ -1,0 +1,37 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <form class="form-signin" method="post" action="/setup_admin">
+        {% csrf_token %}
+        <h1 class="h3 mb-3 font-weight-normal">Create PostHog account</h1>
+
+        {% if error %}
+        <p>That account already exists. <a href='/login'>Try logging in?</a>.</p>
+        {% endif %}
+        <div class='form-signin-inputs'>
+            <div class='field'>
+                <input type="name" name='company_name' id="inputCompany" placeholder="" value="{{ company_name }}" required autofocus>
+                <label for="inputCompany" >Company name</label>
+            </div>
+            <div class='field'>
+                <input type="name" name='name' id="inputName" placeholder="" value="{{ name }}" required>
+                <label for="inputName" >Name</label>
+            </div>
+            <div class='field'>
+                <input type="email" name='email' id="inputEmail" placeholder="" value="{{ email }}" required>
+                <label for="inputEmail">Email address</label>
+            </div>
+            <div class='field'>
+                <input type="password" name='password' id="inputPassword" placeholder="" required>
+                <label for="inputPassword">Password</label>
+            </div>
+            <p>
+                <label style="cursor: pointer">
+                    <input type="checkbox" name='emailOptIn' id="emailOptIn"> 
+                    Tick this box to receive security and feature updates via email. You can easily unsubscribe at any time.
+                </label>
+            </p>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Create account</button>
+    </form>
+{% endblock %}
