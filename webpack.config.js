@@ -5,22 +5,22 @@ module.exports = {
     mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
     devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'inline-source-map',
     entry: {
-        main: './frontend/src/index.js',
-        editor: './frontend/src/editor/index.js',
+        main: './src/frontend/src/index.js',
+        editor: './src/frontend/src/editor/index.js',
     },
     watchOptions: {
         ignored: /node_modules/,
     },
     output: {
-        path: path.resolve(__dirname, 'frontend', 'dist'),
+        path: path.resolve(__dirname, 'src', 'frontend', 'static'),
         filename: '[name].js',
         publicPath: '/static/',
     },
     resolve: {
         alias: {
-            '~': path.resolve(__dirname, 'frontend', 'src'),
-            lib: path.resolve(__dirname, 'frontend', 'src', 'lib'),
-            scenes: path.resolve(__dirname, 'frontend', 'src', 'scenes'),
+            '~': path.resolve(__dirname, 'src', 'frontend', 'src'),
+            lib: path.resolve(__dirname, 'src', 'frontend', 'src', 'lib'),
+            scenes: path.resolve(__dirname, 'src', 'frontend', 'src', 'scenes'),
         },
     },
     module: {
