@@ -9,6 +9,7 @@ export function AppEditorLink({ actionId, style, className, children }) {
     const [modalOpen, setModalOpen] = useState(false)
     const { user } = useValues(userLogic)
     const appUrls = user.team.app_urls
+    console.log('appUrls[0]',appUrls[0]);
 
     return (
         <>

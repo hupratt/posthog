@@ -194,7 +194,7 @@ class App extends Component {
 window.ph_load_editor = function(editorParams) {
     let container = document.createElement('div')
     document.body.appendChild(container)
-
+    console.log('append');
     ReactDOM.render(
         <App
             apiURL={editorParams.apiURL}

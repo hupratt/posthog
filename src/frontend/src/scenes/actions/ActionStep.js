@@ -238,6 +238,7 @@ export class ActionStep extends Component {
         )
     }
     AutocaptureFields({ step, isEditor, actionId }) {
+        console.log('isEditor',isEditor);
         return (
             <div>
                 {!isEditor && (
@@ -298,6 +299,7 @@ export class ActionStep extends Component {
     }
     render() {
         let { step, isEditor, actionId } = this.props
+        console.log('step',step);
 
         return (
             <div
