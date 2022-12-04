@@ -97,3 +97,5 @@ This repo is entirely [MIT licensed](/LICENSE). We charge for things like user p
 <a href="https://github.com/anandvenkat4"><img src="https://avatars2.githubusercontent.com/u/3582757?v=4" title="anandvenkat4" width="80" height="80"></a>
 
 tail /var/log/celery/posthog/celery.log -n 1000
+sudo systemctl daemon-reload
+sudo systemctl start your-service.service
