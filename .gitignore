@@ -29,3 +29,4 @@ apache/
 src/frontend/static
 env/
 node_modules
+frontend/dist

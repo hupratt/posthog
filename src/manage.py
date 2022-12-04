@@ -7,7 +7,10 @@ import dotenv
 
 def main():
     if os.environ.get("DJANGO_DEVELOPMENT") == "True":
-        dotenv.read_dotenv("/home/ubuntu/Dev/posthog/.env.development")
+        dotenv.read_dotenv(        os.path.join(
+            os.path.dirname(os.path.dirname(__file__)),
+            ".env.development",
+        ))
     else:
         dotenv.read_dotenv("/home/ubuntu/Dev/posthog/.env")
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'posthog.settings')

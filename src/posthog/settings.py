@@ -182,11 +182,11 @@ SOCIAL_AUTH_GITLAB_API_URL = os.environ.get('SOCIAL_AUTH_GITLAB_API_URL', "https
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('POSTHOG_DB_NAME'),
-        'USER': os.environ.get('POSTHOG_DB_USER', 'postgres'),
-        'PASSWORD': os.environ.get('POSTHOG_DB_PASSWORD', ''),
-        'HOST': os.environ.get('POSTHOG_POSTGRES_HOST', 'localhost'),
-        'PORT': os.environ.get('POSTHOG_POSTGRES_PORT', '5432'),
+        'NAME': os.environ.get('dbname'),
+        'USER': os.environ.get('dbuser', 'postgres'),
+        'PASSWORD': os.environ.get('dbpassword', ''),
+        'HOST': os.environ.get('hostip', 'localhost'),
+        'PORT': os.environ.get('pnumber', '5432'),
         'CONN_MAX_AGE': 0,
     }
 }
@@ -264,10 +264,3 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'tim@posthog.com')
 
 # You can pass a comma deliminated list of domains with which users can sign up to this service
 RESTRICT_SIGNUPS = os.environ.get('RESTRICT_SIGNUPS', False)
-
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-        'LOCATION': 'cache_table',
-    }
-}

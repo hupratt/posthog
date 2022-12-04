@@ -7,15 +7,21 @@ import time, dotenv
 
 # Load .env variables
 if os.environ.get("DJANGO_DEVELOPMENT") == "True":
-    dotenv.read_dotenv("/home/ubuntu/Dev/posthog/.env.development")
+    dotenv.read_dotenv(        os.path.join(
+            os.path.dirname(os.path.dirname(__file__)),
+            ".env.development",
+        ))
 else:
-    dotenv.read_dotenv("/home/ubuntu/Dev/posthog/.env")
+    dotenv.read_dotenv(        os.path.join(
+            os.path.dirname(os.path.dirname(__file__)),
+            ".env",
+        ))
 
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'posthog.settings')
 
 app = Celery('posthog')
-app.conf.broker_url = 'amqp://localhost'
+app.conf.broker_url = os.environ.get('CELERY_BROKER_URL')  
 # Using a string here means the worker doesn't have to serialize
 # the configuration object to child processes.
 # - namespace='CELERY' means all celery-related configuration keys
