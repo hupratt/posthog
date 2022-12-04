@@ -73,12 +73,12 @@ TRUST_ALL_PROXIES = os.environ.get('TRUST_ALL_PROXIES', False)
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', "6(@hkxrx07e*z3@6ls#uwajz6v@#8-%mmvs8-_y7c_c^l5c0m$")
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
 ALLOWED_HOSTS = [
-    '*'
+    'posthog.craftstudios.eu'
 ]
 
 
@@ -121,7 +121,7 @@ ROOT_URLCONF = 'posthog.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['frontend/dist', 'posthog/templates'],
+        'DIRS': ['frontend/dist', 'src/posthog/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
