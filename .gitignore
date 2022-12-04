@@ -31,3 +31,4 @@ env/
 node_modules
 frontend/dist
 *.rdb
+static
