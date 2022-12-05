@@ -15,7 +15,6 @@ import sys
 import dj_database_url
 import sentry_sdk
 from django.core.exceptions import ImproperlyConfigured
-from sentry_sdk.integrations.django import DjangoIntegration
 
 VERSION = '1.4.0'
 
@@ -36,22 +35,7 @@ SITE_URL = os.environ.get('SITE_URL', 'http://localhost:8000')
 
 SECURE_SSL_REDIRECT = False
 
-if os.environ.get("DJANGO_DEVELOPMENT") is None:
-    # Sentry
-    import sentry_sdk  # pylint: disable=import-error
-    from sentry_sdk.integrations.django import DjangoIntegration
 
-    sentry_sdk.init(
-        dsn="https://edab42407c7042cb9826032d2aae6234@sentry.io/2550899",
-        integrations=[DjangoIntegration()],
-    )
-    
-if not DEBUG and not TEST:
-    if os.environ.get('SENTRY_DSN'):
-        sentry_sdk.init(
-            dsn=os.environ['SENTRY_DSN'],
-            integrations=[DjangoIntegration()]
-        )
 
 if os.environ.get('DISABLE_SECURE_SSL_REDIRECT'):
     SECURE_SSL_REDIRECT = False
