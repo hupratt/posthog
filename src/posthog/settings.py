@@ -47,8 +47,6 @@ if os.environ.get("DJANGO_DEVELOPMENT") is None:
     )
     
 if not DEBUG and not TEST:
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
     if os.environ.get('SENTRY_DSN'):
         sentry_sdk.init(
             dsn=os.environ['SENTRY_DSN'],
@@ -78,7 +76,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 
 ALLOWED_HOSTS = [
-    'posthog.craftstudios.eu'
+    'posthog.craftstudios.eu','127.0.0.1'
 ]
 
 
@@ -121,7 +119,7 @@ ROOT_URLCONF = 'posthog.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['frontend/dist', 'src/posthog/templates'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
