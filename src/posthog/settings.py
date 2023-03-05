@@ -246,3 +246,20 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'tim@posthog.com')
 
 # You can pass a comma deliminated list of domains with which users can sign up to this service
 RESTRICT_SIGNUPS = os.environ.get('RESTRICT_SIGNUPS', False)
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
+        },
+    },
+}
